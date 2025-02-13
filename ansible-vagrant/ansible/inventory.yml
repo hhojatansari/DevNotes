@@ -1,18 +1,24 @@
 all:
-  hosts:
+  children:
     lb:
-      ansible_host: 192.168.56.151
-      ansible_ssh_user: vagrant
-      ansible_python_interpreter: /usr/bin/python3
-    app1:
-      ansible_host: 192.168.56.152
-      ansible_ssh_user: vagrant
-      ansible_python_interpreter: /usr/bin/python3
-    app2:
-      ansible_host: 192.168.56.153
-      ansible_ssh_user: vagrant
-      ansible_python_interpreter: /usr/bin/python3
+      hosts:
+        load_balancer:
+          ansible_host: 192.168.56.151
+          ansible_ssh_user: vagrant
+          ansible_python_interpreter: /usr/bin/python3
+    apps:
+      hosts:
+        app1:
+          ansible_host: 192.168.56.152
+          ansible_ssh_user: vagrant
+          ansible_python_interpreter: /usr/bin/python3
+        app2:
+          ansible_host: 192.168.56.153
+          ansible_ssh_user: vagrant
+          ansible_python_interpreter: /usr/bin/python3
     db:
-      ansible_host: 192.168.56.154
-      ansible_ssh_user: vagrant
-      ansible_python_interpreter: /usr/bin/python3
+      hosts:
+        database:
+          ansible_host: 192.168.56.154
+          ansible_ssh_user: vagrant
+          ansible_python_interpreter: /usr/bin/python3

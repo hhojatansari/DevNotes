@@ -1,0 +1,7 @@
+---
+
+- name: Reload nginx configure
+  hosts: lb
+  become: true
+  roles:
+    - reload_nginx
