@@ -1,0 +1,12 @@
+---
+# handlers file for app
+
+- name: restart app
+  become: true
+  systemd:
+    name: app
+    state: restarted
+
+- name: reload firewall
+  ufw:
+    state: reloaded

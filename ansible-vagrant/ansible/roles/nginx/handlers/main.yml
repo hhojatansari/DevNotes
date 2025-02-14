@@ -5,3 +5,7 @@
   systemd:
     name: nginx
     state: restarted
+
+- name: reload firewall
+  ufw:
+    state: reloaded

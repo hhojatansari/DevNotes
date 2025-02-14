@@ -3,8 +3,8 @@ events { worker_connections 1024; }
 
 http {
     upstream app_servers {
-        server {{ hostvars['app1']['ansible_host'] }}:{{ app1_port }};
-        server {{ hostvars['app2']['ansible_host'] }}:{{ app2_port }};
+        server {{ hostvars['app1']['ansible_host'] }}:{{ app_port }};
+        server {{ hostvars['app2']['ansible_host'] }}:{{ app_port }};
     }
 
     server {

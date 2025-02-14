@@ -1,5 +1,0 @@
----
-# vars file for nginx
-
-app1_port: 1371
-app2_port: 1371

@@ -1,0 +1,7 @@
+---
+
+- name: Load Balancer
+  hosts: lb
+  become: yes
+  roles:
+    - nginx

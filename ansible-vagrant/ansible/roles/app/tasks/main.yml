@@ -1,0 +1,77 @@
+---
+# tasks file for app
+
+- name: Install Python and dependencies
+  apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-venv
+    state: present
+  become: yes
+  tags: install
+
+- name: Install required Python packages (FastAPI, Uvicorn)
+  pip:
+    name:
+      - fastapi
+      - uvicorn
+    state: present
+  become: yes
+  tags: install
+
+- name: Allow SSH port through the firewall
+  ufw:
+    rule: allow
+    name: OpenSSH
+  notify: reload firewall
+  tags: install
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+  tags: install
+
+- name: Allow port {{ app_port }} for FastAPI
+  ufw:
+    rule: allow
+    port: "{{ app_port }}"
+    proto: tcp
+  tags: install
+
+- name: Copy app to target machines
+  template:
+    src: app.py
+    dest: /home/vagrant/app.py
+    mode: '0755'
+  notify: restart app
+  tags:
+    - install 
+    - reload
+
+- name: Create app service file
+  become: true
+  template:
+    src: app.service.j2
+    dest: /etc/systemd/system/app.service
+  notify: restart app
+  tags:
+    - install 
+    - reload
+
+- name: Reload systemd
+  become: true
+  systemd:
+    daemon_reload: yes
+  tags:
+    - install 
+    - reload
+
+- name: Enable app service
+  become: true
+  systemd:
+    name: app
+    enabled: yes
+  tags:
+    - install 
+    - reload

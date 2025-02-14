@@ -1,0 +1,7 @@
+---
+
+- name: Deploy app1 and app2
+  hosts: apps
+  become: yes
+  roles:
+    - app

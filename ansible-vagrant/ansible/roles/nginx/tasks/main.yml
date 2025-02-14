@@ -1,0 +1,37 @@
+---
+# tasks file for nginx
+
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+  tags: install
+
+- name: Allow SSH port through the firewall
+  ufw:
+    rule: allow
+    name: OpenSSH
+  notify: reload firewall
+  tags: install
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+  tags: install
+
+- name: Allow port 80 web app
+  ufw:
+    rule: allow
+    port: 80
+    proto: tcp
+  tags: install
+
+- name: Copy nginx config from template
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - restart nginx
+    tags: 
+      - install
+      - reload
