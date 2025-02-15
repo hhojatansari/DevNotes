@@ -1,0 +1,22 @@
+# MongoDB Configuration File
+
+net:
+  bindIp: 0.0.0.0   # Allow connections from any IP (Change to specific IP if needed)
+  port: {{ db_port }}       # Default MongoDB Port
+
+security:
+  authorization: disabled  # Enable authentication for security
+
+storage:
+  dbPath: /var/lib/mongodb  # Default database path
+  journal:
+    enabled: true           # Enable journaling for data safety
+
+systemLog:
+  destination: file
+  path: /var/log/mongodb/mongod.log
+  logAppend: true
+
+processManagement:
+  fork: true                # Run MongoDB as a daemon
+  pidFilePath: /var/run/mongodb/mongod.pid

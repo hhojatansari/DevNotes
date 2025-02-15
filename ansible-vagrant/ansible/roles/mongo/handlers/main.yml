@@ -1,0 +1,20 @@
+---
+# handlers file for mongo
+
+- name: Restart MongoDB
+  systemd:
+    name: mongod
+    state: restarted
+    enabled: yes
+
+- name: restart networking
+  service:
+    name: networking
+    state: restarted
+
+- name: apply netplan
+  command: netplan apply
+
+- name: reload firewall
+  ufw:
+    state: reloaded

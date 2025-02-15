@@ -15,7 +15,8 @@
   pip:
     name:
       - fastapi
-      - uvicorn
+      - uvicorn[standard]
+      - pymongo
     state: present
   become: yes
   tags: install

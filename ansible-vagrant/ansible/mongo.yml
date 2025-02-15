@@ -1,0 +1,7 @@
+---
+
+- name: MongoDB
+  hosts: db
+  become: yes
+  roles:
+    - mongo

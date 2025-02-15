@@ -1,0 +1,86 @@
+---
+# tasks file for mongo
+
+- name: Install required packages
+  apt:
+    name: gnupg
+    state: present
+    update_cache: yes
+  tags: install
+
+- name: Add MongoDB GPG key
+  apt_key:
+    url: https://pgp.mongodb.com/server-6.0.asc
+    keyring: /usr/share/keyrings/mongodb-server-keyring.gpg
+    state: present
+  tags: install
+
+- name: Set static IP and DNS for eth1
+  copy:
+    dest: "/etc/netplan/00-installer-config.yaml"
+    content: |
+      network:
+        ethernets:
+          enp0s3:
+            dhcp4: true
+            dhcp-identifier: mac
+            nameservers:
+              addresses:
+                - 178.22.122.100
+                - 185.51.200.2
+        version: 2
+  notify:
+    - apply netplan
+  tags: install
+
+- name: Add MongoDB official repository
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/mongodb-server-keyring.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse"
+    filename: mongodb-org-6.0
+    state: present
+  tags: install
+
+- name: Update package cache and install MongoDB
+  apt:
+    update_cache: yes
+    name: mongodb-org
+    state: present
+  tags: install
+
+- name: Allow SSH port through the firewall
+  ufw:
+    rule: allow
+    name: OpenSSH
+  notify: reload firewall
+  tags: install
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+  tags: install
+
+- name: Allow MongoDB port ({{ db_port }})
+  ufw:
+    rule: allow
+    port: "{{ db_port }}"
+    proto: tcp
+  tags: 
+    - install
+    - reload
+
+- name: Copy MongoDB configuration file
+  template:
+    src: mongod.conf.j2
+    dest: /etc/mongod.conf
+  notify: Restart MongoDB
+  tags:
+    - install
+    - reload
+
+- name: Enable and start MongoDB service
+  systemd:
+    name: mongod
+    enabled: yes
+    state: started
+  tags:
+    - install
