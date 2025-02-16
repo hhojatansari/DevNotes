@@ -67,14 +67,14 @@ async def process_data(process_time: float):
     
     return {"result": "Ok!", "process_time": process_time, "app": "{{ ansible_hostname }}"}
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse) # {{ ansible_eth1.ipv4.address }}:{{ app_port }}
 async def home():
     return """
     <html>
         <head>
             <title>FastAPI Service</title>
             <script>
-                var ws = new WebSocket("ws://{{ ansible_all_ipv4_addresses[1] }}:{{ app_port }}/ws");
+                var ws = new WebSocket("ws://192.168.56.151/ws");
                 ws.onmessage = function(event) {
                     var newItem = document.createElement("li");
                     newItem.textContent = event.data;
